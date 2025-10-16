@@ -1,63 +1,166 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Malaysia Births Visualization</title>
+  <title>Malaysia Births Visualization Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
   <style>
+    /* Background container setup */
     body {
       margin: 0;
-      background: #f9f9f9;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: #222;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      height: 100vh;
+      min-height: 100vh;
       overflow-y: auto;
+      position: relative;
     }
 
-    #map {
-      width: 90vw;
+    /* Blurred background image */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("https://career-advice.jobs.ac.uk/wp-content/uploads/Malaysia2-e1634207099694-1170x630.jpg.optimal.jpg");
+      background-size: cover;
+      background-position: center;
+      filter: blur(8px) brightness(0.6);
+      z-index: -2;
+    }
+
+    /* Light overlay for better contrast */
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.6);
+      z-index: -1;
+    }
+
+    h1 {
+      font-size: 35px;
+      margin-top: 40px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 32px;
+      margin-top: 80px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    p {
+      font-size: 24px;
+      text-align: center;
+      width: 80%;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    /* Visualization containers */
+    #map, #trend_line, #johor_ethnicity, #scatter_compare {
+      width: 97vw;
       height: 60vh;
       margin-top: 20px;
-      margin-bottom: 50px;
-    }
-
-    #trend_line {
-      width: 90vw;
-      height: 30vh;
-      margin-top: 80px;
       margin-bottom: 100px;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      padding: 10px;
     }
 
-    #johor_ethnicity {
-      width: 90vw;
-      height: 30vh;
-      margin-top: 80px;
-      margin-bottom: 50px;
+    footer {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 40px;
+      text-align: center;
     }
   </style>
 </head>
+
 <body>
+  <h1><strong>Malaysia Live Births Data Visualization (2000–2023)</strong></h1>
+  <p>
+    This interactive dashboard explores how <strong>Malaysia’s population</strong> has evolved through <strong>birth patterns</strong> over more than two decades. 
+    By combining <strong>spatial</strong>, <strong>temporal</strong>, and <strong>demographic perspectives</strong>, the visualizations below reveal how different <strong>states</strong>, <strong>ethnicities</strong>, and <strong>genders</strong> contribute to Malaysia’s dynamic <strong>population growth</strong>.
+  </p>
+
+  <!-- 1. MAP -->
+  <h2><strong>1. Live Birth Distribution Across Malaysia</strong></h2>
+  <p>
+    The journey begins with a <strong>bird’s-eye view of Malaysia</strong>. This map highlights how <strong>live births are distributed</strong> across the nation’s states and territories. 
+    <strong>Darker shades represent states with higher numbers of births</strong>, reflecting <strong>denser population centers</strong> such as <strong>Selangor</strong>, <strong>Johor</strong>, and <strong>Sabah</strong>. 
+    By hovering over each state, you can observe how <strong>population growth is not uniform</strong>—some regions experience consistent increases, while others remain stable. 
+    This visualization establishes the foundation for understanding <strong>Malaysia’s regional demographic balance</strong> and the areas <strong>driving national population growth</strong>.
+  </p>
   <div id="map"></div>
+
+  <!-- 2. TREND LINE -->
+  <h2><strong>2. National Trend of Live Births Over Time</strong></h2>
+  <p>
+    Next, the line chart zooms into the <strong>timeline of Malaysia’s live births from 2000 to 2023</strong>. 
+    Here, we can trace the nation’s overall <strong>population trajectory</strong>—from <strong>early 2000s growth spurts</strong> to more recent <strong>fluctuations</strong>. 
+    Notice how some years exhibit <strong>peaks and dips</strong>, often corresponding to <strong>economic cycles</strong>, <strong>health policies</strong>, or <strong>social trends</strong>. 
+    The filter controls allow you to explore <strong>individual states</strong> or <strong>demographic segments</strong>, revealing whether national shifts are widespread or concentrated in specific regions. 
+    This <strong>time-based view</strong> provides crucial context for interpreting how <strong>Malaysia’s population expansion</strong> has evolved across decades.
+  </p>
   <div id="trend_line"></div>
+
+  <!-- 3. JOHOR ETHNICITY -->
+  <h2><strong>3. Ethnic Breakdown of Live Births in Johor</strong></h2>
+  <p>
+    Moving closer to the <strong>state level</strong>, this visualization focuses on <strong>Johor</strong>, one of Malaysia’s most <strong>populous</strong> and <strong>economically vibrant regions</strong>. 
+    Each bar represents a <strong>major ethnic group</strong>, showing how <strong>birth numbers among Malay, Chinese, Indian, and other communities</strong> have changed over time. 
+    The trends reveal more than raw numbers—they tell a story of <strong>cultural diversity</strong> and <strong>demographic transition</strong>. 
+    As Malaysia continues to modernize, some groups experience <strong>steadier growth</strong>, while others show <strong>gradual declines</strong>, reflecting broader <strong>social and economic dynamics</strong> influencing <strong>family size</strong> and <strong>fertility rates</strong>. 
+    This chart emphasizes that <strong>population growth</strong> in Malaysia is not only about totals but also about the <strong>shifting balance between communities</strong>.
+  </p>
   <div id="johor_ethnicity"></div>
 
+  <!-- 4. SCATTER COMPARE -->
+  <h2><strong>4. Gender Comparison of Live Births by State</strong></h2>
+  <p>
+    Finally, the scatter plot compares <strong>male and female live births</strong> across all Malaysian states, offering a <strong>gender-based perspective</strong> on <strong>population growth</strong>. 
+    Each point represents a <strong>state</strong>, positioned by its number of <strong>male (x-axis)</strong> and <strong>female (y-axis)</strong> births. 
+    The <strong>diagonal balance line</strong> helps identify whether a state has more male or female births—an important <strong>demographic indicator</strong>. 
+    States close to the line show <strong>balanced gender ratios</strong>, while those farther away reveal <strong>interesting deviations</strong> that may relate to <strong>migration</strong>, <strong>healthcare access</strong>, or <strong>local population patterns</strong>. 
+    Through this visualization, we see how <strong>gender dynamics</strong> play an integral role in shaping <strong>Malaysia’s future population structure</strong>.
+  </p>
+  <div id="scatter_compare"></div>
+
+  <footer>
+    © 2025 <strong>Malaysia Births Dashboard</strong> | Data Source: <strong>data.gov.my</strong>
+  </footer>
+</body>
+
   <script type="text/javascript">
-    // Embed the map visualization
     vegaEmbed('#map', 'map_births.json', { actions: false })
-      .then(result => console.log("Map loaded successfully"))
+      .then(() => console.log("Map loaded successfully"))
       .catch(console.error);
 
-    // Embed the trend line visualization
     vegaEmbed('#trend_line', 'trend_line.json', { actions: false })
-      .then(result => console.log("Trend line loaded successfully"))
+      .then(() => console.log("Trend line loaded successfully"))
       .catch(console.error);
 
-    // Embed the Johor ethnicity visualization
     vegaEmbed('#johor_ethnicity', 'johor_ethnicity.json', { actions: false })
-      .then(result => console.log("Johor ethnicity chart loaded successfully"))
+      .then(() => console.log("Johor ethnicity chart loaded successfully"))
+      .catch(console.error);
+
+    vegaEmbed('#scatter_compare', 'scatter_compare.json', { actions: false })
+      .then(() => console.log("Scatter compare chart loaded successfully"))
       .catch(console.error);
   </script>
 </body>
