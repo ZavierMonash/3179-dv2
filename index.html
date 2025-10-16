@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Malaysia Births Visualization</title>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <style>
+    body {
+      margin: 0;
+      background: #f9f9f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    #map {
+      width: 90vw;
+      height: 60vh;
+      margin-top: 20px;
+      margin-bottom: 50px;
+    }
+
+    #trend_line {
+      width: 90vw;
+      height: 30vh;
+      margin-top: 80px;
+      margin-bottom: 100px;
+    }
+
+    #johor_ethnicity {
+      width: 90vw;
+      height: 30vh;
+      margin-top: 80px;
+      margin-bottom: 50px;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div id="trend_line"></div>
+  <div id="johor_ethnicity"></div>
+
+  <script type="text/javascript">
+    // Embed the map visualization
+    vegaEmbed('#map', 'map_births.json', { actions: false })
+      .then(result => console.log("Map loaded successfully"))
+      .catch(console.error);
+
+    // Embed the trend line visualization
+    vegaEmbed('#trend_line', 'trend_line.json', { actions: false })
+      .then(result => console.log("Trend line loaded successfully"))
+      .catch(console.error);
+
+    // Embed the Johor ethnicity visualization
+    vegaEmbed('#johor_ethnicity', 'johor_ethnicity.json', { actions: false })
+      .then(result => console.log("Johor ethnicity chart loaded successfully"))
+      .catch(console.error);
+  </script>
+</body>
+</html>

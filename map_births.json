@@ -1,0 +1,110 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Live Births in Malaysia by State, Sex, and Ethnicity (2000–2023)",
+    "anchor": "middle",
+    "fontSize": 20
+  },
+  "width": "container",
+  "height": 600,
+  "projection": {"type": "mercator", "center": [110, 4], "scale": 4000},
+
+  "params": [
+    {
+      "name": "YearSelection",
+      "value": 2023,
+      "bind": {
+        "input": "select",
+        "options": [
+          2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
+          2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019,
+          2020, 2021, 2022, 2023
+        ],
+        "name": "Select Year: "
+      }
+    },
+    {
+      "name": "SexSelection",
+      "value": "both",
+      "bind": {
+        "input": "select",
+        "options": ["both", "male", "female"],
+        "labels": ["Both", "Male", "Female"],
+        "name": "Select Sex: "
+      }
+    },
+    {
+      "name": "EthnicitySelection",
+      "value": "overall",
+      "bind": {
+        "input": "select",
+        "options": [
+          "overall", "bumi_malay", "bumi_other", "chinese",
+          "indian", "other_citizen", "other_noncitizen"
+        ],
+        "labels": [
+          "All Ethnicities", "Malay", "Other Bumiputera",
+          "Chinese", "Indian", "Other Citizens", "Non-Citizens"
+        ],
+        "name": "Select Ethnicity: "
+      }
+    }
+  ],
+
+  "layer": [
+    {
+      "data": {
+        "url": "malaysia_states.topojson",
+        "format": {"type": "topojson", "feature": "states"}
+      },
+      "mark": {"type": "geoshape", "fill": "#f5f5f5", "stroke": "#ccc"}
+    },
+    {
+      "data": {"url": "birth_sex_ethnic_state.csv"},
+      "transform": [
+        {
+          "calculate": "year(datum.date)",
+          "as": "year"
+        },
+        {"filter": "datum.year == YearSelection"},
+        {"filter": "datum.sex == SexSelection"},
+        {"filter": "datum.ethnicity == EthnicitySelection"},
+        {
+          "lookup": "state",
+          "from": {
+            "data": {
+              "url": "malaysia_states.topojson",
+              "format": {"type": "topojson", "feature": "states"}
+            },
+            "key": "id",
+            "fields": ["geometry"]
+          }
+        }
+      ],
+      "mark": {"type": "geoshape", "stroke": "white"},
+      "encoding": {
+        "shape": {"field": "geometry", "type": "geojson"},
+        "color": {
+          "field": "abs",
+          "type": "quantitative",
+          "scale": {"scheme": "Blues"},
+          "legend": {
+            "title": "Live Births",
+            "orient": "right",
+            "gradientLength": 300,
+            "gradientThickness": 20,
+            "labelFontSize": 13,
+            "titleFontSize": 15
+          }
+        },
+        "tooltip": [
+          {"field": "state", "type": "nominal", "title": "State"},
+          {"field": "year", "type": "ordinal", "title": "Year"},
+          {"field": "sex", "type": "nominal", "title": "Sex"},
+          {"field": "ethnicity", "type": "nominal", "title": "Ethnicity"},
+          {"field": "abs", "type": "quantitative", "title": "Live Births"}
+        ]
+      }
+    }
+  ]
+}

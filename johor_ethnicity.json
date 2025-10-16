@@ -1,0 +1,73 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Number of live births in Johor by ethnicity from 2000 to 2023 (bar chart).",
+  "data": {
+    "url": "birth_sex_ethnic_state.csv"
+  },
+  "transform": [
+    { "filter": "datum.state == 'Johor'" },
+    { "filter": "datum.sex == 'both'" },
+    { "filter": "datum.ethnicity != 'overall'" }
+  ],
+  "mark": {
+    "type": "bar"
+  },
+  "encoding": {
+    "x": {
+      "timeUnit": "year",
+      "field": "date",
+      "type": "temporal",
+      "title": "Year",
+      "axis": {
+        "format": "%Y",
+        "titleFontSize": 20,
+        "labelFontSize": 20
+      }
+    },
+    "y": {
+      "field": "abs",
+      "type": "quantitative",
+      "title": "Number of Live Births",
+      "axis": {
+        "titleFontSize": 20,
+        "labelFontSize": 20
+      }
+    },
+    "color": {
+      "field": "ethnicity",
+      "type": "nominal",
+      "title": "Ethnicity",
+      "scale": { "scheme": "category10" },
+      "legend": {
+        "titleFontSize": 20,
+        "labelFontSize": 20
+      }
+    },
+    "tooltip": [
+      { "field": "state", "title": "State" },
+      { "field": "ethnicity", "title": "Ethnicity" },
+      { "field": "sex", "title": "Sex" },
+      { "field": "date", "timeUnit": "year", "type": "temporal", "title": "Year" },
+      { "field": "abs", "title": "Live Births" }
+    ]
+  },
+  "title": {
+    "text": "Live Births in Johor by Ethnicity (2000–2023)",
+    "fontSize": 20
+  },
+  "config": {
+    "axis": {
+      "titleFontSize": 20,
+      "labelFontSize": 20
+    },
+    "legend": {
+      "titleFontSize": 20,
+      "labelFontSize": 20
+    },
+    "title": {
+      "fontSize": 20
+    }
+  },
+  "width": "container",
+  "height": 600
+}

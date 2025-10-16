@@ -1,0 +1,106 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Trends in Live Births in Malaysia (2000–2023)",
+    "anchor": "middle",
+    "fontSize": 20
+  },
+  "width": "container",
+  "height": 400,
+
+  "params": [
+    {
+      "name": "StateSelection",
+      "value": "All",
+      "bind": {
+        "input": "select",
+        "options": [
+          "All", "Johor", "Kedah", "Kelantan", "Melaka", "Negeri Sembilan",
+          "Pahang", "Perak", "Perlis", "Pulau Pinang", "Sabah", "Sarawak",
+          "Selangor", "Terengganu", "W.P. Kuala Lumpur", "W.P. Labuan", "W.P. Putrajaya"
+        ],
+        "name": "Select State: "
+      }
+    },
+    {
+      "name": "SexSelection",
+      "value": "both",
+      "bind": {
+        "input": "select",
+        "options": ["both", "male", "female"],
+        "labels": ["Both", "Male", "Female"],
+        "name": "Select Sex: "
+      }
+    },
+    {
+      "name": "EthnicitySelection",
+      "value": "overall",
+      "bind": {
+        "input": "select",
+        "options": [
+          "overall", "bumi_malay", "bumi_other", "chinese",
+          "indian", "other_citizen", "other_noncitizen"
+        ],
+        "labels": [
+          "All Ethnicities", "Malay", "Other Bumiputera",
+          "Chinese", "Indian", "Other Citizens", "Non-Citizens"
+        ],
+        "name": "Select Ethnicity: "
+      }
+    }
+  ],
+
+  "data": {"url": "birth_sex_ethnic_state.csv"},
+
+  "transform": [
+    {
+      "calculate": "year(datum.date)",
+      "as": "year"
+    },
+    {"filter": "datum.sex == SexSelection"},
+    {"filter": "datum.ethnicity == EthnicitySelection"},
+    {
+      "filter": "StateSelection == 'All' ? true : datum.state == StateSelection"
+    }
+  ],
+
+  "mark": {"type": "line", "point": true},
+
+  "encoding": {
+    "x": {
+      "field": "year",
+      "type": "temporal",
+      "title": "Year",
+      "axis": {"format": "d", "labelAngle": 0}
+    },
+    "y": {
+      "field": "abs",
+      "type": "quantitative",
+      "title": "Number of Live Births"
+    },
+    "color": {
+      "field": "state",
+      "type": "nominal",
+      "title": "State",
+      "legend": {
+        "title": "State Legend",
+        "orient": "right",
+        "titleFontSize": 13,
+        "labelFontSize": 12,
+        "symbolSize": 120
+      }
+    },
+    "tooltip": [
+      {"field": "year", "type": "ordinal", "title": "Year"},
+      {"field": "state", "type": "nominal", "title": "State"},
+      {"field": "sex", "type": "nominal", "title": "Sex"},
+      {"field": "ethnicity", "type": "nominal", "title": "Ethnicity"},
+      {"field": "abs", "type": "quantitative", "title": "Live Births"}
+    ]
+  },
+
+  "config": {
+    "background": "#f8f8f8",
+    "axis": {"labelFontSize": 13, "titleFontSize": 14}
+  }
+}

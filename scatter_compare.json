@@ -1,0 +1,111 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Scatter Comparison of Live Births by State and Ethnicity (2000–2023)",
+    "fontSize": 20
+  },
+  "width": "container",
+  "height": 400,
+  "data": { "url": "birth_sex_ethnic_state.csv" },
+
+  "params": [
+    {
+      "name": "StateSelect",
+      "bind": {
+        "input": "select",
+        "options": [
+          "All", "Johor", "Kedah", "Kelantan", "Melaka", "Negeri Sembilan",
+          "Pahang", "Perak", "Perlis", "Pulau Pinang", "Sabah", "Sarawak",
+          "Selangor", "Terengganu", "W.P. Kuala Lumpur", "W.P. Labuan", "W.P. Putrajaya"
+        ],
+        "name": "Select State: "
+      },
+      "value": "All"
+    },
+    {
+      "name": "SexSelect",
+      "bind": {
+        "input": "select",
+        "options": ["both", "male", "female"],
+        "labels": ["Both", "Male", "Female"],
+        "name": "Select Sex: "
+      },
+      "value": "both"
+    },
+    {
+      "name": "EthnicitySelect",
+      "bind": {
+        "input": "select",
+        "options": [
+          "All", "bumi_malay", "bumi_other", "chinese",
+          "indian", "other_citizen", "other_noncitizen"
+        ],
+        "labels": [
+          "All Ethnicities", "Malay", "Other Bumiputera",
+          "Chinese", "Indian", "Other Citizens", "Non-Citizens"
+        ],
+        "name": "Select Ethnicity: "
+      },
+      "value": "All"
+    }
+  ],
+
+  "transform": [
+    { "calculate": "year(datum.date)", "as": "year" },
+    { "filter": "datum.sex == SexSelect" },
+    {
+      "filter": "StateSelect == 'All' ? true : datum.state == StateSelect"
+    },
+    {
+      "filter": "EthnicitySelect == 'All' ? true : datum.ethnicity == EthnicitySelect"
+    }
+  ],
+
+  "mark": {
+    "type": "point",
+    "filled": true,
+    "size": 100,
+    "opacity": 0.8
+  },
+
+  "encoding": {
+    "x": {
+      "field": "year",
+      "type": "temporal",
+      "title": "Year",
+      "axis": { "format": "%Y", "titleFontSize": 20, "labelFontSize": 20 }
+    },
+    "y": {
+      "field": "abs",
+      "type": "quantitative",
+      "title": "Number of Live Births",
+      "axis": { "titleFontSize": 20, "labelFontSize": 20 }
+    },
+    "color": {
+      "field": "ethnicity",
+      "type": "nominal",
+      "title": "Ethnicity",
+      "scale": { "scheme": "category10" },
+      "legend": { "titleFontSize": 20, "labelFontSize": 20 }
+    },
+    "shape": {
+      "field": "state",
+      "type": "nominal",
+      "title": "State",
+      "legend": { "titleFontSize": 20, "labelFontSize": 20 }
+    },
+    "tooltip": [
+      { "field": "state", "title": "State" },
+      { "field": "ethnicity", "title": "Ethnicity" },
+      { "field": "sex", "title": "Sex" },
+      { "field": "year", "title": "Year" },
+      { "field": "abs", "title": "Live Births" }
+    ]
+  },
+
+  "config": {
+    "axis": { "titleFontSize": 20, "labelFontSize": 20 },
+    "legend": { "titleFontSize": 20, "labelFontSize": 20 },
+    "title": { "fontSize": 20 }
+  }
+}
