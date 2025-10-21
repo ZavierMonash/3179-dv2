@@ -1,13 +1,13 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {
-    "text": "Live Births in Malaysia by State, Sex, and Ethnicity (2000–2023)",
+    "text": "Normalized Live Births in Malaysia by State, Sex, and Ethnicity (2000–2023)",
     "anchor": "middle",
     "fontSize": 20
   },
   "width": "container",
   "height": 600,
-  "projection": {"type": "mercator", "center": [110, 4], "scale": 4000},
+  "projection": {"type": "mercator", "center": [110, 4], "scale": 2800},
 
   "params": [
     {
@@ -62,13 +62,16 @@
     {
       "data": {"url": "birth_sex_ethnic_state.csv"},
       "transform": [
-        {
-          "calculate": "year(datum.date)",
-          "as": "year"
-        },
+        {"calculate": "year(datum.date)", "as": "year"},
         {"filter": "datum.year == YearSelection"},
         {"filter": "datum.sex == SexSelection"},
         {"filter": "datum.ethnicity == EthnicitySelection"},
+        {
+          "joinaggregate": [
+            {"op": "sum", "field": "abs", "as": "total_births"}
+          ]
+        },
+        {"calculate": "datum.abs / datum.total_births", "as": "normalized_births"},
         {
           "lookup": "state",
           "from": {
@@ -85,11 +88,11 @@
       "encoding": {
         "shape": {"field": "geometry", "type": "geojson"},
         "color": {
-          "field": "abs",
+          "field": "normalized_births",
           "type": "quantitative",
+          "title": "Share of National Births",
           "scale": {"scheme": "Blues"},
           "legend": {
-            "title": "Live Births",
             "orient": "right",
             "gradientLength": 300,
             "gradientThickness": 20,
@@ -102,7 +105,13 @@
           {"field": "year", "type": "ordinal", "title": "Year"},
           {"field": "sex", "type": "nominal", "title": "Sex"},
           {"field": "ethnicity", "type": "nominal", "title": "Ethnicity"},
-          {"field": "abs", "type": "quantitative", "title": "Live Births"}
+          {"field": "abs", "type": "quantitative", "title": "Live Births"},
+          {
+            "field": "normalized_births",
+            "type": "quantitative",
+            "title": "Share of National Births",
+            "format": ".2%"
+          }
         ]
       }
     }

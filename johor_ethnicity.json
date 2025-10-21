@@ -37,7 +37,9 @@
       "field": "ethnicity",
       "type": "nominal",
       "title": "Ethnicity",
-      "scale": { "scheme": "category10" },
+      "scale": {
+        "range": ["#117733", "#44AA99", "#DDCC77", "#88CCEE", "#332288", "#999933", "#CC6677"]
+      },
       "legend": {
         "titleFontSize": 20,
         "labelFontSize": 20
